@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lingua AI — Language Translator</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--text:#172033;--muted:#697386;--line:#e3e8f0;--accent:#6658e8;--accent2:#8b5cf6;--soft:#efedff;--shadow:0 18px 50px rgba(32,42,76,.09)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(ellipse at 8% 0%,#e9e7ff 0,transparent 35%),var(--bg);color:var(--text);min-height:100vh}
+button,select,textarea{font:inherit}button{cursor:pointer}
+header{max-width:1120px;margin:auto;padding:25px 24px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:20px;letter-spacing:-.5px}.logo{height:39px;width:39px;border-radius:13px;background:linear-gradient(135deg,var(--accent),#a855f7);display:grid;place-items:center;color:white;font-size:20px;box-shadow:0 7px 20px #6658e844}
+.tag{font-size:12px;font-weight:700;color:#6658e8;background:#efedff;padding:8px 12px;border-radius:99px}
+main{max-width:1000px;margin:42px auto 70px;padding:0 24px}.intro{text-align:center;margin-bottom:32px}.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);font-weight:800}.intro h1{font-size:clamp(32px,5vw,50px);letter-spacing:-2px;margin:12px 0 10px;line-height:1.08}.intro p{color:var(--muted);font-size:16px;margin:0}
+.translator{background:var(--panel);border:1px solid #e8ebf2;border-radius:25px;box-shadow:var(--shadow);padding:20px}
+.language-bar{display:grid;grid-template-columns:1fr 54px 1fr;gap:12px;align-items:center;margin-bottom:15px}
+.lang-select{border:1px solid var(--line);background:#fbfcff;padding:13px 14px;border-radius:13px;color:var(--text);width:100%;font-weight:650;outline:none}
+.swap{border:1px solid var(--line);background:white;border-radius:13px;width:48px;height:48px;display:grid;place-items:center;color:var(--accent);font-size:21px;transition:.2s}.swap:hover{background:var(--soft);transform:rotate(180deg)}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pane{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;min-width:0}.pane.output{background:#faf9ff;border-color:#e7e3ff}
+.pane-head{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #edf0f5;font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+textarea{width:100%;height:220px;resize:vertical;border:0;outline:0;padding:18px;font-size:17px;line-height:1.6;color:var(--text);background:transparent}textarea::placeholder{color:#a2aabc}
+.result{height:220px;overflow:auto;padding:18px;font-size:17px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:#27214d}.result.placeholder{color:#a2aabc}
+.pane-foot{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;border-top:1px solid #edf0f5;color:#8a93a5;font-size:12px}
+.icon-btn{border:0;background:transparent;color:#65708a;padding:5px 8px;border-radius:8px}.icon-btn:hover{background:#efedff;color:var(--accent)}
+.actions{display:flex;align-items:center;gap:12px;margin-top:18px}.translate{border:0;border-radius:14px;padding:15px 24px;color:white;font-weight:800;background:linear-gradient(110deg,var(--accent),var(--accent2));box-shadow:0 8px 20px #6658e833;flex:1}.translate:disabled{opacity:.65;cursor:wait}.clear{border:1px solid var(--line);background:white;border-radius:14px;padding:14px 18px;font-weight:700;color:#606a7d}
+.status{min-height:23px;margin:13px 3px 0;color:var(--muted);font-size:13px}.status.error{color:#c24141}
+.info{display:flex;gap:13px;align-items:flex-start;margin:22px 4px 0;color:var(--muted);font-size:13px;line-height:1.5}.info span{color:var(--accent);font-size:17px}
+footer{text-align:center;padding:22px;color:#8992a3;font-size:12px}
+@media(max-width:680px){header{padding:18px 16px}main{margin:28px auto 45px;padding:0 14px}.intro{margin-bottom:23px}.translator{padding:13px;border-radius:19px}.language-bar{grid-template-columns:1fr 43px 1fr;gap:7px}.lang-select{padding:11px 8px;font-size:13px}.swap{width:40px;height:43px}.panels{grid-template-columns:1fr}.textarea,.result{height:160px}.actions{gap:8px}.translate{padding:14px 12px}.clear{padding:13px 12px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">文</div> Lingua <span style="color:#8b5cf6">AI</span></div>
+  <div class="tag">CODEALPHA · TASK 01</div>
+</header>
+<main>
+  <section class="intro">
+    <div class="eyebrow">Break language barriers</div>
+    <h1>Words connect<br><span style="color:#6658e8">the world.</span></h1>
+    <p>Translate text between languages in a simple, beautiful workspace.</p>
+  </section>
+  <section class="translator" aria-label="Language translator">
+    <div class="language-bar">
+      <select class="lang-select" id="sourceLang" aria-label="Source language">
+        <option value="autodetect">Detect language</option>
+        <option value="en" selected>English</option><option value="hi">Hindi</option><option value="mr">Marathi</option>
+        <option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option>
+        <option value="it">Italian</option><option value="pt">Portuguese</option><option value="ru">Russian</option>
+        <option value="ja">Japanese</option><option value="ko">Korean</option><option value="zh">Chinese (Simplified)</option>
+        <option value="ar">Arabic</option><option value="bn">Bengali</option><option value="ta">Tamil</option>
+        <option value="te">Telugu</option><option value="gu">Gujarati</option><option value="ur">Urdu</option>
+      </select>
+      <button class="swap" id="swapBtn" title="Swap languages" aria-label="Swap languages">⇄</button>
+      <select class="lang-select" id="targetLang" aria-label="Target language">
+        <option value="en">English</option><option value="hi" selected>Hindi</option><option value="mr">Marathi</option>
+        <option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option>
+        <option value="it">Italian</option><option value="pt">Portuguese</option><option value="ru">Russian</option>
+        <option value="ja">Japanese</option><option value="ko">Korean</option><option value="zh">Chinese (Simplified)</option>
+        <option value="ar">Arabic</option><option value="bn">Bengali</option><option value="ta">Tamil</option>
+        <option value="te">Telugu</option><option value="gu">Gujarati</option><option value="ur">Urdu</option>
+      </select>
+    </div>
+    <div class="panels">
+      <div class="pane">
+        <div class="pane-head"><span>Original text</span><span id="sourceLabel">English</span></div>
+        <textarea id="sourceText" maxlength="5000" placeholder="Type or paste something to translate…" spellcheck="true"></textarea>
+        <div class="pane-foot"><span id="charCount">0 / 5,000</span><div><button class="icon-btn" id="speakSource" title="Listen to original">🔊</button><button class="icon-btn" id="clearText" title="Clear text">✕</button></div></div>
+      </div>
+      <div class="pane output">
+        <div class="pane-head"><span>Translation</span><span id="targetLabel">Hindi</span></div>
+        <div class="result placeholder" id="translatedText" aria-live="polite">Your translation will appear here…</div>
+        <div class="pane-foot"><span id="resultMeta">Ready to translate</span><div><button class="icon-btn" id="copyResult" title="Copy translation">▢</button><button class="icon-btn" id="speakResult" title="Listen to translation">🔊</button></div></div>
+      </div>
+    </div>
+    <div class="actions"><button class="translate" id="translateBtn">✦ Translate text</button><button class="clear" id="resetBtn">Reset</button></div>
+    <div class="status" id="status" role="status"></div>
+  </section>
+  <div class="info"><span>ⓘ</span><div><b>Powered by MyMemory translation API.</b> This demo uses a free public service and may have usage limits. Avoid entering confidential or sensitive information.</div></div>
+</main>
+<footer>Built as CodeAlpha Artificial Intelligence Internship · Task 1 — Language Translation Tool</footer>
+<script>
+const $ = id => document.getElementById(id);
+const sourceLang=$('sourceLang'), targetLang=$('targetLang'), sourceText=$('sourceText');
+let lastTranslation='';
+const languageNames={autodetect:'Detect language',en:'English',hi:'Hindi',mr:'Marathi',es:'Spanish',fr:'French',de:'German',it:'Italian',pt:'Portuguese',ru:'Russian',ja:'Japanese',ko:'Korean',zh:'Chinese (Simplified)',ar:'Arabic',bn:'Bengali',ta:'Tamil',te:'Telugu',gu:'Gujarati',ur:'Urdu'};
+function setStatus(message,error=false){$('status').textContent=message;$('status').className='status'+(error?' error':'')}
+function updateLabels(){$('sourceLabel').textContent=languageNames[sourceLang.value];$('targetLabel').textContent=languageNames[targetLang.value]}
+sourceText.addEventListener('input',()=>{$('charCount').textContent=`${sourceText.value.length.toLocaleString()} / 5,000`;});
+sourceLang.addEventListener('change',updateLabels);targetLang.addEventListener('change',updateLabels);
+$('swapBtn').addEventListener('click',()=>{if(sourceLang.value==='autodetect'){setStatus('Choose a source language before swapping.',true);return}const s=sourceLang.value;sourceLang.value=targetLang.value;targetLang.value=s;const old=sourceText.value;sourceText.value=lastTranslation;lastTranslation=old;$('translatedText').textContent=old||'Your translation will appear here…';$('translatedText').classList.toggle('placeholder',!old);$('charCount').textContent=`${sourceText.value.length.toLocaleString()} / 5,000`;updateLabels();setStatus('Languages swapped.');});
+$('translateBtn').addEventListener('click',async()=>{
+ const text=sourceText.value.trim();if(!text){setStatus('Enter some text to translate first.',true);sourceText.focus();return}
+ if(sourceLang.value===targetLang.value){setStatus('Source and target languages are the same.',true);return}
+ const btn=$('translateBtn');btn.disabled=true;btn.textContent='Translating…';setStatus('Connecting to translation service…');$('resultMeta').textContent='Working…';
+ try{
+  const pair=(sourceLang.value==='autodetect'?'autodetect':sourceLang.value)+'|'+targetLang.value;
+  const url='https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+encodeURIComponent(pair);
+  const response=await fetch(url);if(!response.ok)throw new Error('The translation service returned an error.');
+  const data=await response.json();
+  if(data.responseStatus!==200)throw new Error(data.responseDetails||'Translation could not be completed. Try again shortly.');
+  const translated=data.responseData?.translatedText;
+  if(!translated)throw new Error('No translation was returned.');
+  lastTranslation=translated;$('translatedText').textContent=translated;$('translatedText').classList.remove('placeholder');$('resultMeta').textContent='Translation complete';setStatus('Translation completed successfully.');
+ }catch(err){setStatus(err.message+' Check your internet connection or try again later.',true);$('resultMeta').textContent='Translation unavailable'}
+ finally{btn.disabled=false;btn.textContent='✦ Translate text'}
+});
+$('copyResult').addEventListener('click',async()=>{if(!lastTranslation){setStatus('There is no translation to copy.',true);return}try{await navigator.clipboard.writeText(lastTranslation);setStatus('Translation copied to clipboard.')}catch{setStatus('Clipboard access was blocked by your browser.',true)}});
+function speak(text,lang){if(!text){setStatus('There is no text to read aloud.',true);return}if(!('speechSynthesis'in window)){setStatus('Text-to-speech is not supported in this browser.',true);return}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text);utterance.lang=lang==='autodetect'?'en':lang;speechSynthesis.speak(utterance)}
+$('speakSource').addEventListener('click',()=>speak(sourceText.value,sourceLang.value));$('speakResult').addEventListener('click',()=>speak(lastTranslation,targetLang.value));
+$('clearText').addEventListener('click',()=>{sourceText.value='';$('charCount').textContent='0 / 5,000';sourceText.focus()});
+$('resetBtn').addEventListener('click',()=>{sourceText.value='';lastTranslation='';$('charCount').textContent='0 / 5,000';$('translatedText').textContent='Your translation will appear here…';$('translatedText').classList.add('placeholder');$('resultMeta').textContent='Ready to translate';setStatus('');});
+updateLabels();
+</script>
+</body>
+</html>
